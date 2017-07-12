@@ -1,7 +1,7 @@
 /***************************************************************************
- CTABuffer.h
+ ACPBuffer.h
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,22 +14,22 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CTABUFFER_H
-#define _CTABUFFER_H
+#ifndef _ACPBUFFER_H
+#define _ACPBUFFER_H
 
 #include <pthread.h>
 #include <semaphore.h>
-#include "CTAData.h"
+#include "ACPData.h"
 #include <string>
 
 //the producer/consumer (aka Bounded Buffer) problem.
-namespace CTAAlgorithm {
+namespace ACPAlgorithm {
 	
-	class CTABuffer {
+	class ACPBuffer {
 		
 	private:
 		
-		CTAData** buffer;
+		ACPData** buffer;
 		int fill;
 		int use;
 		int circularBuffer;
@@ -45,15 +45,15 @@ namespace CTAAlgorithm {
 		
 	public:
 		
-		CTABuffer(std::string name, int size);
-		~CTABuffer();
+		ACPBuffer(std::string name, int size);
+		~ACPBuffer();
 		///Put data into local buffer
 		///The call is blocking if the buffer is full. Test it before with isFull()
-		void put(CTAData* data);
+		void put(ACPData* data);
 		
 		///get processed data from buffer
 		///The call is blocking if the buffer is empty.
-		CTAData* get();
+		ACPData* get();
 
 		std::string getName() {
 			return _name;
@@ -63,7 +63,7 @@ namespace CTAAlgorithm {
 		
 		bool isFull();
 		
-		CTAData* getNextCircularBuffer();
+		ACPData* getNextCircularBuffer();
 	};
 }
 

@@ -1,7 +1,7 @@
 /***************************************************************************
- CTABuffer.cpp
+ ACPBuffer.cpp
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,14 +14,14 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "CTABuffer.h"
+#include "ACPBuffer.h"
 #include <iostream>
 #include <fcntl.h>
 
-namespace CTAAlgorithm {
+namespace ACPAlgorithm {
 
-CTABuffer::CTABuffer(std::string name, int size) {
-	this->buffer = (CTAData**) new CTAData* [size];
+ACPBuffer::ACPBuffer(std::string name, int size) {
+	this->buffer = (ACPData**) new ACPData* [size];
 	this->size = size;
 	fill = 0;
 	use  = 0;
@@ -48,14 +48,14 @@ CTABuffer::CTABuffer(std::string name, int size) {
 	pthread_mutex_init(&mutex, NULL);
 }
 
-CTABuffer::~CTABuffer() {
+ACPBuffer::~ACPBuffer() {
 	sem_close(empty);
 	sem_unlink(semname1.c_str());
 	sem_close(full);
 	sem_unlink(semname2.c_str());
 }
 
-void CTABuffer::put(CTAData* data) {
+void ACPBuffer::put(ACPData* data) {
 	int ret = sem_wait(empty);
 	if(ret != 0) {
 		perror("empty sem_wait() failed ");
@@ -77,14 +77,14 @@ void CTABuffer::put(CTAData* data) {
 
 }
 
-bool CTABuffer::isFull() {
+bool ACPBuffer::isFull() {
 	if(fill == size - 1)
 		return true;
 
 	return false;
 }
 
-CTAData* CTABuffer::get() {
+ACPData* ACPBuffer::get() {
 	int ret = sem_wait(full);
 	if(ret != 0) {
 		perror("full sem_wait() failed ");
@@ -94,7 +94,7 @@ CTAData* CTABuffer::get() {
 	// scope of lock reduced
 	pthread_mutex_lock(&mutex);
 	
-	CTAData* b = buffer[use];
+	ACPData* b = buffer[use];
 	use = (use + 1) % size;
 	
 	pthread_mutex_unlock(&mutex);
@@ -108,15 +108,15 @@ CTAData* CTABuffer::get() {
 	return b;
 }
 
-CTAData* CTABuffer::getNextCircularBuffer() {
+ACPData* ACPBuffer::getNextCircularBuffer() {
 	
-	CTAData* b = buffer[circularBuffer];
+	ACPData* b = buffer[circularBuffer];
 	circularBuffer = (circularBuffer + 1) % size;
 	return b;
 }
 
 
-int CTABuffer::getBufferSize() {
+int ACPBuffer::getBufferSize() {
 	return this->size;
 }
 

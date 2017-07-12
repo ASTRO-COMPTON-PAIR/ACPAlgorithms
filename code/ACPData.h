@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAProducer.cpp
+ ACPData
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,20 +14,18 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "CTAProducer.h"
+#ifndef _ACPDATA_H
+#define _ACPDATA_H
 
-namespace CTAAlgorithm {
 
-CTAProducer::CTAProducer(CTABuffer* buffer_output) {
-	this->buffer_output = buffer_output;
+namespace ACPAlgorithm {
+	
+	class ACPData {
+		
+	public:
+		int id;
+		
+	};
 }
 
-void CTAProducer::setBufferOutput(CTABuffer* buffer_output) {
-	this->buffer_output = buffer_output;
-}
-
-CTABuffer* CTAProducer::getBufferOutput() {
-	return this->buffer_output;
-}
-
-}
+#endif

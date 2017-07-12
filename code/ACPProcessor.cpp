@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAConsumer.h
+ ACPProcessor.cpp
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,42 +14,36 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CTACONSUMER_H
-#define _CTACONSUMER_H
+#include "ACPProcessor.h"
 
-#include "CTABuffer.h"
-#include <ctautils/Thread.h>
+namespace ACPAlgorithm {
 
-namespace CTAAlgorithm {
-	
-	
-	///CTA algorithm base class
-	class CTAConsumer {
-		
-	protected:
-		
-		CTABuffer* buffer_input;
-		
-	public:
-		
-		CTAConsumer(CTABuffer* buffer_input);
-		
-		void setBufferInput(CTABuffer* buffer_input);
-		
-		CTABuffer* getBufferInput();
-		
-	};
-	
-	
-	class CTABufferCleaner : public CTAConsumer, public CTAUtils::Thread {
-	
-	public:
-		
-		CTABufferCleaner(CTABuffer* buffer_input);
-		
-		void *run();
-	};
-	
+void ACPProcessorThread::init(ACPProcessor* alg) {
+	this->alg = alg;
+	this->stopb = false;
 }
 
-#endif
+void *ACPProcessorThread::run() {
+	while(!stopb) {
+		alg->processBufferElement();
+	}
+	return 0;
+}
+
+void ACPProcessorThread::stop() {
+	stopb = true;
+}
+
+
+ACPProcessor::ACPProcessor(ACPTelescopeConfig* telConfig, ACPBuffer* buffer_input, ACPBuffer* buffer_output) : ACPConsumer(buffer_input), ACPProducer(buffer_output) {
+	this->config = telConfig;
+}
+
+void ACPProcessor::processBufferElement() {
+	ACPData* input = buffer_input->get();
+	ACPData* output = process(input);
+	if(buffer_output)
+		buffer_output->put(output);
+}
+
+}

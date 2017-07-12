@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAConsumer.cpp
+ ACPConsumer.h
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,42 +14,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "CTAConsumer.h"
-#include <iostream>
+#ifndef _ACPCONSUMER_H
+#define _ACPCONSUMER_H
 
-namespace CTAAlgorithm {
+#include "ACPBuffer.h"
+#include <acputils/Thread.h>
 
-CTAConsumer::CTAConsumer(CTABuffer* buffer_input) {
-	this->buffer_input = buffer_input;
-}
-
-void CTAConsumer::setBufferInput(CTABuffer* buffer_input) {
-	this->buffer_input = buffer_input;
-}
-
-CTABuffer* CTAConsumer::getBufferInput() {
-	return buffer_input;
-}
-
-
-//---------
-
-CTABufferCleaner::CTABufferCleaner(CTABuffer* buffer_input) : CTAConsumer(buffer_input) {
-
-}
-
-void *CTABufferCleaner::run() {
-	
-	std::cout << "Thread cleaner started" << std::endl;
+namespace ACPAlgorithm {
 	
 	
-	while (true) {
-		CTAData* d = buffer_input->get();
-		//cout << "del" << endl;
-		delete d;
-	}
-	return 0;
+	///ACP algorithm base class
+	class ACPConsumer {
+		
+	protected:
+		
+		ACPBuffer* buffer_input;
+		
+	public:
+		
+		ACPConsumer(ACPBuffer* buffer_input);
+		
+		void setBufferInput(ACPBuffer* buffer_input);
+		
+		ACPBuffer* getBufferInput();
+		
+	};
+	
+	
+	class ACPBufferCleaner : public ACPConsumer, public ACPUtils::Thread {
+	
+	public:
+		
+		ACPBufferCleaner(ACPBuffer* buffer_input);
+		
+		void *run();
+	};
 	
 }
 
-}
+#endif

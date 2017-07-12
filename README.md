@@ -1,4 +1,4 @@
 BaseProject
 ===========
 
-Base project for C++
+set $LOCAL to installation dir

@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAProducer.h
+ ACPConsumer.cpp
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,31 +14,42 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CTAPRODUCER_H
-#define _CTAPRODUCER_H
+#include "ACPConsumer.h"
+#include <iostream>
 
-#include "CTABuffer.h"
+namespace ACPAlgorithm {
 
-namespace CTAAlgorithm {
+ACPConsumer::ACPConsumer(ACPBuffer* buffer_input) {
+	this->buffer_input = buffer_input;
+}
+
+void ACPConsumer::setBufferInput(ACPBuffer* buffer_input) {
+	this->buffer_input = buffer_input;
+}
+
+ACPBuffer* ACPConsumer::getBufferInput() {
+	return buffer_input;
+}
+
+
+//---------
+
+ACPBufferCleaner::ACPBufferCleaner(ACPBuffer* buffer_input) : ACPConsumer(buffer_input) {
+
+}
+
+void *ACPBufferCleaner::run() {
+	
+	std::cout << "Thread cleaner started" << std::endl;
 	
 	
-	///CTA algorithm base class
-	class CTAProducer {
-		
-	protected:
-		
-		CTABuffer* buffer_output;
-		
-	public:
-		
-		CTAProducer(CTABuffer* buffer_output);
-		
-		void setBufferOutput(CTABuffer* buffer_output);
-		
-		CTABuffer* getBufferOutput();
-		
-	};
+	while (true) {
+		ACPData* d = buffer_input->get();
+		//cout << "del" << endl;
+		delete d;
+	}
+	return 0;
 	
 }
 
-#endif
+}

@@ -18,19 +18,19 @@
 #		* uninstall: add or remove the files and directories that should be uninstalled
 #############################################################################
 
-PROJECT= RTACoreIce1
+PROJECT= libACPAlgorithms
 SHELL = /bin/sh
 
 ####### 1) Project names and system
 
 SYSTEM= $(shell gcc -dumpmachine)
-#ice, ctarta, mpi, cfitsio
-LINKERENV= ctarta, cfitsio
+#ice, acp, mpi, cfitsio
+LINKERENV= acp, cfitsio
 EXE_NAME1 =
-LIB_NAME = libCTAAlgorithms
+LIB_NAME = libACPAlgorithms
 VER_FILE_NAME = version.h
 #the name of the directory where the conf file are copied (into $(datadir))
-CONF_DEST_DIR = rtaalgorithms
+CONF_DEST_DIR = acpalgorithms
 #the name of the icon for the installation
 ICON_NAME=
 
@@ -73,7 +73,7 @@ CC       = gcc
 endif
 
 #Set INCPATH to add the inclusion paths
-INCPATH = -I $(INCLUDE_DIR) -I $(CTARTA)/include
+INCPATH = -I $(INCLUDE_DIR) -I $(LOCAL)/include
 LIBS = -lstdc++
 #Insert the optional parameter to the compiler. The CFLAGS could be changed externally by the user
 CFLAGS   ?=
@@ -84,8 +84,8 @@ ALL_CFLAGS = -fexceptions -Wall -std=c++11  $(INCPATH)
 ifneq (, $(findstring cfitsio, $(LINKERENV)))
 	LIBS += -lcfitsio
 endif
-ifneq (, $(findstring ctarta, $(LINKERENV)))
-	LIBS += -lpacket -lRTAUtils -lCTAConfig -pthreads
+ifneq (, $(findstring acp, $(LINKERENV)))
+	LIBS += -lACPUtils -pthreads
 endif
 ifneq (, $(findstring root, $(LINKERENV)))
 	ROOTCFLAGS   := $(shell root-config --cflags)

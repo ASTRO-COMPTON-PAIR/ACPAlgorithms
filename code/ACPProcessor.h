@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAProcessor.h
+ ACPProcessor.h
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,53 +14,53 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _CTAPROCESSOR_H
-#define _CTAPROCESSOR_H
+#ifndef _ACPPROCESSOR_H
+#define _ACPPROCESSOR_H
 
-#include <CTAMDArray.h>
-#include <ctautils/Thread.h>
+#include <acputils/Thread.h>
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-#include "CTAData.h"
-#include "CTABuffer.h"
-#include "CTAProducer.h"
-#include "CTAConsumer.h"
+#include "ACPData.h"
+#include "ACPBuffer.h"
+#include "ACPProducer.h"
+#include "ACPConsumer.h"
+#include "ACPTelescopeConfig.h"
 
-namespace CTAAlgorithm {
+namespace ACPAlgorithm {
 	
 
-	///CTA algorithm base class
-	class CTAProcessor : public CTAConsumer, public CTAProducer {
+	///ACP algorithm base class
+	class ACPProcessor : public ACPConsumer, public ACPProducer {
 		
 	protected:
 		
-		CTAConfig::CTAMDArray* array;
+		ACPTelescopeConfig* config;
 		
 		
 	public:
 		
-		CTAProcessor(CTAConfig::CTAMDArray* array, CTABuffer* buffer_input = 0, CTABuffer* buffer_output = 0);
+		ACPProcessor(ACPTelescopeConfig* telConfig, ACPBuffer* buffer_input = 0, ACPBuffer* buffer_output = 0);
 		
 		virtual void init() = 0;
 		
 		virtual void processBufferElement();
 		
 		///write the algorithm in this method. Use this method also the test manually the algorithm
-		virtual CTAData* process(CTAData* input) = 0;
+		virtual ACPData* process(ACPData* input) = 0;
 		
 	};
 	
-	class CTAProcessorThread : public CTAUtils::Thread {
+	class ACPProcessorThread : public ACPUtils::Thread {
 	private:
 		
-		CTAProcessor* alg;
+		ACPProcessor* alg;
 		
 		bool stopb;
 		
 	public:
 				
-		void init(CTAProcessor* alg);
+		void init(ACPProcessor* alg);
 		
 		void *run();
 		

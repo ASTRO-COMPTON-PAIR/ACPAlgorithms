@@ -1,7 +1,7 @@
 /***************************************************************************
- CTAProcessor.cpp
+ ACPProducer.cpp
  -------------------
- copyright            : (C) 2014 Andrea Bulgarelli, Alessio Aboudan
+ copyright            : (C) 2014-2017 Andrea Bulgarelli, Alessio Aboudan
  email                : bulgarelli@iasfbo.inaf.it
  ***************************************************************************/
 
@@ -14,36 +14,20 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "CTAProcessor.h"
+#include "ACPProducer.h"
 
-namespace CTAAlgorithm {
+namespace ACPAlgorithm {
 
-void CTAProcessorThread::init(CTAProcessor* alg) {
-	this->alg = alg;
-	this->stopb = false;
+ACPProducer::ACPProducer(ACPBuffer* buffer_output) {
+	this->buffer_output = buffer_output;
 }
 
-void *CTAProcessorThread::run() {
-	while(!stopb) {
-		alg->processBufferElement();
-	}
-	return 0;
+void ACPProducer::setBufferOutput(ACPBuffer* buffer_output) {
+	this->buffer_output = buffer_output;
 }
 
-void CTAProcessorThread::stop() {
-	stopb = true;
-}
-
-
-CTAProcessor::CTAProcessor(CTAConfig::CTAMDArray* array, CTABuffer* buffer_input, CTABuffer* buffer_output) : CTAConsumer(buffer_input), CTAProducer(buffer_output) {
-	this->array = array;
-}
-
-void CTAProcessor::processBufferElement() {
-	CTAData* input = buffer_input->get();
-	CTAData* output = process(input);
-	if(buffer_output)
-		buffer_output->put(output);
+ACPBuffer* ACPProducer::getBufferOutput() {
+	return this->buffer_output;
 }
 
 }
